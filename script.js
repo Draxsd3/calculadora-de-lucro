@@ -1,5 +1,3 @@
-
-
 function showError(message) {
     document.getElementById('errorMessage').innerText = message;
     $('#errorModal').modal('show');
