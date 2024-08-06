@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Lucro</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="container d-flex flex-column min-vh-100 justify-content-center">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card mt-5">
+                    <div class="card-header text-center">
+                        <h1>Bem-vindo à Calculadora de Lucro</h1>
+                    </div>
+                    <div class="card-body text-center">
+                        <p>Escolha o marketplace para começar:</p>
+                        <div class="d-flex justify-content-around mb-4">
+                            <img src="img/Amazon-Logo.png" alt="Amazon" class="marketplace-logo amazon-logo" onclick="showForm('amazon')">
+                            <img src="img/mercado-livre.png" alt="Mercado Livre" class="marketplace-logo mercado-livre-logo" onclick="showForm('mercado-livre')">
+                        </div>
+                        <form id="calculator-form" style="display: none;" class="mt-4">
+                            <div id="amazon-fields" style="display: none;">
+                                <div class="form-group">
+                                    <label for="category">Categoria:</label>
+                                    <select class="form-control" id="category">
+                                        <option value="15-1.00">Roupas e acessórios</option>
+                                        <!-- Outros valores... -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="mercado-livre-fields" style="display: none;">
+                                <div class="form-group">
+                                    <label for="mercadoLivreTarifa">Tarifa do Mercado Livre (%):</label>
+                                    <input type="number" class="form-control" id="mercadoLivreTarifa" step="0.01" min="10" max="19">
+                                    <div class="text-center mt-2">
+                                        <a href="https://www.mercadolivre.com.br/landing/custos-de-venda" target="_blank" class="d-block mb-2">Consultar tarifas do Mercado Livre</a>
+                                        <i class="fas fa-question-circle" data-toggle="modal" data-target="#infoModal" style="cursor: pointer; color: #007bff;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="purchasePrice">Preço de Compra do Fornecedor (R$):</label>
+                                <input type="number" class="form-control" id="purchasePrice" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label for="desiredProfitMargin">Porcentagem de Lucro Desejada (%):</label>
+                                <input type="number" class="form-control" id="desiredProfitMargin" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label for="sellingPrice">Preço de Venda (R$):</label>
+                                <input type="text" class="form-control" id="sellingPrice" readonly>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-block" onclick="calculateProfit()">Calcular Preço de Venda</button>
+                            <button type="button" class="btn btn-secondary btn-block" onclick="resetForm()">Voltar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal de Erro -->
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorModalLabel">Erro</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="errorMessage">
+                    <!-- Mensagem de erro será inserida aqui -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="infoModalLabel">Instruções para Consultar Tarifas</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Para consultar a tarifa do Mercado Livre, siga estas instruções:</p>
+                    <ol>
+                        <li>Acesse o link: <a href="https://www.mercadolivre.com.br/landing/custos-de-venda" target="_blank">Consultas de Tarifas</a>.</li>
+                        <li>Localize a seção de categorias e selecione a categoria do seu produto.</li>
+                        <li>Anote a tarifa percentual para a categoria selecionada e insira este valor no campo apropriado.</li>
+                    </ol>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer bg-dark text-white text-center py-4 mt-auto">
+        <div class="container">
+            <p class="mb-1">Todos os direitos reservados a <span>RenanRamos</span> &copy; 2024</p>
+            <p class="mb-0">Desenvolvido por <a href="https://github.com/renanramos" target="_blank" class="text-white font-weight-bold">Renan Ramos</a></p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
